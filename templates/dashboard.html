@@ -1,0 +1,187 @@
+{% extends "dashboard_layout.html" %}
+{% block dashboard_content %}
+{% include 'navbar_private.html' %}
+<main class="p-8 bg-white min-h-screen">
+    <h1 class="text-3xl font-bold text-black mb-6">Welcome, {{ user.username }}!</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="mb-6 max-w-xl mx-auto">
+                {% for message in messages %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-2 text-center">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-xl mx-auto">
+        <h2 class="text-xl font-semibold mb-4 text-black">Add a New Keyword</h2>
+        <div class="mb-2 text-sm text-black flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <span>Current Plan: <span class="font-semibold">{{ user.plan|capitalize }}</span></span>
+            <span>Usage: <span class="font-semibold">{{ keywords|length }} / 3 Keywords Used</span></span>
+        </div>
+        <a href="#" class="block w-full mb-4 py-2 px-4 text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg font-semibold text-base text-center transition">Upgrade to Pro</a>
+        <form method="POST" action="{{ url_for('dashboard') }}" class="space-y-4">
+            <div>
+                <label for="keyword" class="block mb-1 text-sm font-medium text-black">Keyword</label>
+                <input type="text" id="keyword" name="keyword" class="block w-full px-4 py-2 border border-black rounded-lg focus:ring-black focus:border-black bg-white text-black" placeholder="e.g., 'Tesla Model Y'" required>
+            </div>
+            <button type="submit" class="w-full py-2 px-4 text-white bg-black hover:bg-gray-900 rounded-lg font-semibold text-base transition">Add Keyword</button>
+        </form>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto">
+        <h2 class="text-xl font-semibold mb-4 text-black">Your Monitored Keywords</h2>
+        {% if keywords %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-black">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Keyword</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for keyword in keywords %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-black">{{ keyword.text }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <form action="{{ url_for('delete_keyword', keyword_id=keyword.id) }}" method="POST">
+                                    <button type="submit" class="px-4 py-2 bg-black hover:bg-gray-900 text-white rounded-lg font-semibold text-sm transition">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500">You are not monitoring any keywords yet. Add one above to get started!</p>
+            <p class="text-black">You are not monitoring any keywords yet. Add one above to get started!</p>
+        {% endif %}
+    </div>
+    <!-- Recent Mentions Card -->
+    <div class="bg-white rounded-lg shadow-md p-6 mt-8 max-w-xl mx-auto w-full">
+    <h2 class="text-xl font-semibold mb-4 text-black">Recent Mentions</h2>
+        {% if posts %}
+            <div class="space-y-4">
+                {% for post in posts %}
+                    <article class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="mb-2 text-xs text-gray-500 flex flex-wrap items-center gap-2">
+                            <span class="font-semibold text-black">r/{{ post.subreddit }}</span>
+                            &bull;
+                            <span>u/{{ post.author }}</span>
+                            {% if post.intent == "Buying Question" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-300">{{ post.intent }}</span>
+                            {% elif post.intent == "Competitor Complaint" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">{{ post.intent }}</span>
+                            {% elif post.intent == "Support Request" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300">{{ post.intent }}</span>
+                            {% else %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-300">{{ post.intent }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="mb-2 text-gray-800 whitespace-pre-line">{{ post.text }}</div>
+                        <a href="{{ post.permalink }}" target="_blank" class="inline-block text-black hover:underline text-sm font-medium">View on Reddit</a>
+                        <button type="button" class="ml-2 inline-block px-4 py-2 bg-black hover:bg-gray-900 text-white rounded-lg font-semibold text-sm transition reply-btn" data-modal-target="replyModal" data-modal-toggle="replyModal">Reply</button>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No mentions found yet. Once your keywords are spotted on Reddit, they will appear here!</p>
+            <p class="text-black">No mentions found yet. Once your keywords are spotted on Reddit, they will appear here!</p>
+        {% endif %}
+    </div>
+    <!-- Flowbite Modal for Saved Replies -->
+    <div id="replyModal" tabindex="-1" class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-40 flex items-center justify-center">
+      <div class="relative w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <div class="flex items-center justify-between p-4 border-b rounded-t border-black">
+                        <h3 class="text-xl font-semibold text-black">Reply Helper</h3>
+            <button type="button" class="close-modal text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="replyModal">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <label for="reply-select" class="block text-sm font-medium text-gray-700 mb-2">Choose a template</label>
+            <select id="reply-select" class="block w-full px-3 py-2 border border-black rounded-lg focus:ring-black focus:border-black bg-white text-black">
+              <option value="" disabled selected>Select a reply...</option>
+            </select>
+            <label for="reply-content" class="block text-sm font-medium text-gray-700 mb-2">Reply Content</label>
+            <textarea id="reply-content" rows="5" class="block w-full px-3 py-2 border border-black rounded-lg focus:ring-black focus:border-black bg-white text-black" readonly></textarea>
+            <button id="copy-reply-btn" type="button" class="w-full py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-base transition">Copy to Clipboard</button>
+            <button id="copy-reply-btn" type="button" class="w-full py-2 px-4 text-white bg-black hover:bg-gray-900 rounded-lg font-semibold text-base transition">Copy to Clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
+<div class="px-8 py-10 bg-white min-h-screen">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-8">
+      <div class="bg-black rounded-2xl shadow-lg p-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-extrabold text-white mb-2">Welcome, {{ user.username }}!</h1>
+          <p class="text-lg text-gray-300">Your personal Reddit mention dashboard.</p>
+        </div>
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4ac.svg" alt="Chat" class="w-16 h-16">
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div class="bg-white border-2 border-black rounded-2xl shadow-lg p-6 flex flex-col items-start justify-between">
+        <h2 class="text-xl font-bold text-black mb-2">Generate a Response</h2>
+        <p class="mb-4 text-gray-700">Select any post in your feed and use the AI Agent to generate a response.</p>
+        <a href="#" class="px-6 py-2 rounded-lg bg-black text-white font-bold hover:bg-gray-800 transition">Go to AI Agent</a>
+      </div>
+      <div class="bg-black text-white rounded-2xl shadow-lg p-6 flex flex-col items-start justify-between border-2 border-black">
+        <h2 class="text-xl font-bold mb-2">View Your Analytics</h2>
+        <p class="mb-4 text-gray-300">See charts and data on your top mentions, subreddits, and authors.</p>
+        <a href="#" class="px-6 py-2 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition">View Analytics</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script>
+    // Safely pass the replies data from Flask (backend) to JavaScript (frontend)
+    const savedReplies = {{ replies|tojson | safe }};
+    document.addEventListener('DOMContentLoaded', () => {
+        const replyModalEl = document.getElementById('replyModal');
+        const replySelect = document.getElementById('reply-select');
+        const replyContent = document.getElementById('reply-content');
+        const copyButton = document.getElementById('copy-reply-btn');
+        // This creates a reusable Modal object from Flowbite's library
+        const modal = new Modal(replyModalEl);
+        // Listen for clicks on ANY reply button
+        document.querySelectorAll('.reply-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // 1. Clear previous content
+                replySelect.innerHTML = '<option selected disabled>Select a reply...</option>';
+                replyContent.value = '';
+                copyButton.textContent = 'Copy to Clipboard';
+                // 2. Populate the dropdown with all saved replies
+                savedReplies.forEach(reply => {
+                    const option = document.createElement('option');
+                    option.value = reply.content;
+                    option.textContent = reply.title;
+                    replySelect.appendChild(option);
+                });
+                // 3. Show the modal
+                modal.show();
+            });
+        });
+        // When a user selects a reply, show its content in the textarea
+        replySelect.addEventListener('change', function() {
+            replyContent.value = this.value;
+        });
+        // Copy to clipboard functionality
+        copyButton.addEventListener('click', function() {
+            if (!replyContent.value) return; // Don't copy if empty
+            navigator.clipboard.writeText(replyContent.value).then(() => {
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy to Clipboard';
+                }, 2000);
+            });
+        });
+    });
+</script>
+{% endblock %}
+

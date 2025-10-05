@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Section 1: Navbar (Handled by base.html) -->
+
+<!-- Section 2: Hero (White & Black) -->
+<section class="w-full py-24 bg-white text-black flex items-center justify-center" data-aos="fade-in">
+    <div class="max-w-6xl w-full mx-auto flex flex-col md:flex-row items-center justify-between px-6 gap-12">
+        <div class="flex-1 text-center md:text-left">
+            <div class="uppercase text-black font-bold mb-4 tracking-widest">STOP SEARCHING. START SELLING.</div>
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-black">Find Your Next Customer on Reddit. Before Your Competitors Do.</h1>
+            <p class="text-xl md:text-2xl text-black mb-8">Get real-time alerts for any keyword, brand, or competitor. Turn conversations into conversions, instantly.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-8">
+                <a href="/register" class="px-8 py-4 rounded-xl bg-black text-white text-lg font-bold shadow-xl hover:bg-gray-800 transition ring-2 ring-black ring-offset-2 duration-300 transform hover:scale-105">Start Finding Leads for Free</a>
+                <a href="#demo" class="px-8 py-4 rounded-xl bg-white text-black text-lg font-semibold border border-gray-300 hover:bg-gray-100 transition duration-300 transform hover:scale-105">Watch Demo</a>
+            </div>
+        </div>
+        <div class="flex-1 flex justify-center">
+            <img src="{{ url_for('static', filename='images/hero-section.png') }}" alt="Mention Monitor Hero" class="rounded-2xl shadow-2xl mx-auto w-full max-w-xl h-auto object-contain" />
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: Social Proof (Logos) -->
+<section class="bg-black py-8 text-white" data-aos="fade-up">
+    <div class="max-w-5xl mx-auto text-center">
+        <div class="text-white text-lg mb-4">Trusted by builders at leading companies</div>
+        <div class="flex gap-8 overflow-x-auto justify-center items-center py-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Y_Combinator_logo.svg" alt="YC" class="h-8 grayscale opacity-80 invert" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" class="h-8 grayscale opacity-80 invert" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Vercel_logo_black.svg" alt="Vercel" class="h-8 grayscale opacity-80 invert" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg" alt="Notion" class="h-8 grayscale opacity-80 invert" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="h-8 grayscale opacity-80 invert" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg" alt="Slack" class="h-8 grayscale opacity-80 invert" />
+        </div>
+    </div>
+</section>
+
+<!-- Section 4: Before & After Problem -->
+<section class="bg-white py-20 text-black" data-aos="fade-in">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6">
+        <div class="flex flex-col items-center text-center md:items-start md:text-left" data-aos="fade-right">
+            <h3 class="text-3xl font-bold mb-2 text-black">The Grind</h3>
+            <p class="text-black text-lg">Endless scrolling. Missed opportunities. Spending hours a day manually searching for conversations, only to be too late to the party.</p>
+        </div>
+        <div class="flex flex-col items-center text-center md:items-start md:text-left" data-aos="fade-left">
+            <h3 class="text-3xl font-bold mb-2 text-black">The Flow</h3>
+            <p class="text-black text-lg">Instant alerts, delivered to your inbox. Know the second a conversation starts and be the first to provide value. Go from hunting for leads to having them delivered to you.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Section 5: How It Works -->
+<section class="bg-gray-100 py-20 text-black" data-aos="fade-up">
+    <div class="max-w-5xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12 text-black">From Signal to Sale in 3 Steps.</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl p-8 text-center shadow-lg" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-2 text-black">1. Set Your Keywords</h3>
+                <p class="text-black">Tell us what matters. Our engine starts listening across all of Reddit, 24/7.</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 text-center shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-semibold mb-2 text-black">2. Get AI-Scored Alerts</h3>
+                <p class="text-black">We don't just send a link. Our AI analyzes the conversation and tells you if it's a `Buying Question` or `Competitor Complaint`.</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 text-center shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-semibold mb-2 text-black">3. Engage & Convert</h3>
+                <p class="text-black">Use our Reply Helper to join the conversation with the right information at the right time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 6: Product Glimpse -->
+<section id="demo" class="bg-black py-20 text-white flex items-center justify-center" data-aos="zoom-in-up">
+    <div class="max-w-4xl mx-auto text-center px-6">
+        <h2 class="text-4xl font-bold mb-8 text-white">This is Your New Unfair Advantage.</h2>
+        <div class="flex justify-center mb-8">
+            <img src="{{ url_for('static', filename='images/dashboard-preview.png') }}" alt="Dashboard Preview Screenshot" class="rounded-2xl shadow-2xl mx-auto w-full max-w-3xl h-auto object-contain" />
+        </div>
+        <p class="text-lg text-white">See your "Recent Mentions" feed with colorful AI tags. Instantly know which conversations are worth your time.</p>
+    </div>
+</section>
+
+<!-- Section 7, 8, 9: Feature Deep Dives -->
+<div class="bg-white py-20 text-black">
+    <div class="max-w-6xl mx-auto px-6 space-y-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center" data-aos="fade-right">
+            <div>
+                <h3 class="text-3xl font-bold mb-2 text-black">Find Every Mention. Instantly.</h3>
+                <p class="text-black text-lg">Our distributed worker network scans every single public comment on Reddit in near real-time. While competitors give you a daily summary, we give you a head start.</p>
+            </div>
+            <div class="flex justify-center">
+                <img src="{{ url_for('static', filename='images/section-7.png') }}" alt="Section 7 Feature" class="rounded-2xl shadow-xl mx-auto w-full max-w-md h-auto object-contain" />
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center" data-aos="fade-left">
+            <div class="flex justify-center md:order-2">
+                 <!-- Replace with a simple, clean icon -->
+            </div>
+            <div class="md:order-1">
+                <h3 class="text-3xl font-bold mb-2 text-black">Intelligence, Not Just Data.</h3>
+                <p class="text-black text-lg">This is our secret weapon. Our Gemini-powered AI doesn't just find keywords; it understands intent. Instantly know which conversations are worth your time.</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center" data-aos="fade-right">
+            <div>
+                <h3 class="text-3xl font-bold mb-2 text-black">Respond in Seconds.</h3>
+                <p class="text-black text-lg">Never type the same answer twice. Build a library of Saved Replies and use our AI to generate high-quality starting points. Engage faster and more consistently.</p>
+            </div>
+            <div class="flex justify-center">
+                 <!-- Replace with a simple, clean icon -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 10: Ethical AI Promise -->
+<section class="bg-black py-20 text-white text-center" data-aos="fade-up">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-2 text-white">Your Voice, Amplified. Not Replaced.</h2>
+        <p class="text-lg text-white mb-2">We believe in authentic, human-to-human connection. Our tools are designed to empower you, not impersonate you.</p>
+        <span class="font-bold text-white text-lg">No bots. No spam. Ever. That's our promise.</span>
+    </div>
+</section>
+
+<!-- Section 11: Testimonials -->
+<section class="bg-gray-100 py-20 text-black" data-aos="fade-up">
+    <div class="max-w-5xl mx-auto text-center px-6">
+        <h2 class="text-4xl font-bold mb-12 text-black">Don't Just Take Our Word For It.</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border border-gray-200">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex" class="w-16 h-16 rounded-full mb-4" />
+                <p class="text-lg mb-4 text-black">"Mention Monitor is my secret weapon. The Opportunity Score is a game-changer... Found my first 3 paying customers in a week."</p>
+                <span class="font-semibold text-black">- Alex, Founder of a SaaS Co.</span>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border border-gray-200">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah" class="w-16 h-16 rounded-full mb-4" />
+                <p class="text-lg mb-4 text-black">"I used to spend an hour a day scrolling Reddit. Now I spend 5 minutes reviewing my email alerts. Incredibly valuable."</p>
+                <span class="font-semibold text-black">- Sarah, Indie Hacker</span>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border border-gray-200">
+                <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="John" class="w-16 h-16 rounded-full mb-4" />
+                <p class="text-lg mb-4 text-black">"Mention Monitor helped me find leads I never knew existed. The AI tags are spot on!"</p>
+                <span class="font-semibold text-black">- John, Agency Owner</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 12: User Stats Counter (Simplified) -->
+
+<!-- Section 13: Pricing Plan -->
+<section class="bg-white py-20 text-black" data-aos="fade-up">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12 text-black">Simple, Transparent Pricing.</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-gray-100 rounded-2xl shadow-lg p-8 flex flex-col items-center border border-gray-200">
+                <h3 class="text-2xl font-bold mb-4 text-black">Free Forever</h3>
+                <ul class="text-black mb-6 space-y-2 text-center">
+                    <li>✓ 3 Keywords</li>
+                    <li>✓ Unlimited Alerts</li>
+                    <li>✓ AI Opportunity Score</li>
+                </ul>
+                <a href="/register" class="px-8 py-4 rounded-xl bg-white text-black font-bold shadow-lg hover:bg-gray-200 transition border border-gray-300">Start for Free</a>
+            </div>
+            <div class="bg-black text-white rounded-2xl shadow-lg p-8 flex flex-col items-center border border-gray-800">
+                <h3 class="text-2xl font-bold mb-4 text-white">$19 / month</h3>
+                <ul class="text-white mb-6 space-y-2 text-center">
+                    <li>✓ 30 Keywords</li>
+                    <li>✓ All Free features, plus:</li>
+                    <li>✓ Content Studio & Analytics</li>
+                </ul>
+                <a href="/register" class="px-8 py-4 rounded-xl bg-white text-black font-bold shadow-lg hover:bg-gray-200 transition">Upgrade to Pro</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 14 & 15 Merged: FAQ Spotlight -->
+
+<!-- Section 16: Final CTA -->
+<section class="w-full py-20 bg-black text-white text-center" data-aos="zoom-in">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-4xl font-extrabold mb-6">Find Your First Lead in the Next 10 Minutes.</h2>
+        <p class="text-lg mb-8">Sign up for our free plan. No credit card required. Ever.</p>
+        <a href="/register" class="px-10 py-5 rounded-xl bg-white text-black text-2xl font-bold shadow-xl hover:bg-gray-200 transition duration-300 transform hover:scale-105">Sign Up Free & Start Monitoring</a>
+    </div>
+</section>
+
+<!-- Section 17: Footer -->
+<footer class="bg-black text-white py-10 border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+        <div class="mb-4 md:mb-0">
+            <span class="text-lg font-bold tracking-tight">Mention Monitor</span>
+            <span class="ml-4 text-white">&copy; 2025 All rights reserved.</span>
+        </div>
+        <div class="flex gap-6">
+            <a href="#" class="hover:text-white transition">Terms</a>
+            <a href="#" class="hover:text-white transition">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script>
+    AOS.init({
+        once: true,
+        duration: 900,
+    });
+</script>
+{% endblock %}

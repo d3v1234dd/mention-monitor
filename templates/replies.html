@@ -1,0 +1,80 @@
+{% extends "dashboard_layout.html" %}
+{% block dashboard_content %}
+{% endblock dashboard_content %}
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Saved Replies</h1>
+
+    <!-- Create a New Reply Card -->
+    <div class="bg-white rounded-lg shadow p-6 mb-10">
+        <h2 class="text-xl font-semibold mb-4">Create a New Reply</h2>
+        <form method="POST" action="{{ url_for('manage_replies') }}">
+            <div class="mb-4">
+                <label for="reply-title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input type="text" id="reply-title" name="title" class="form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="General Thank You" required>
+            </div>
+            <div class="mb-4">
+                <label for="reply-content-textarea" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                <textarea id="reply-content-textarea" name="content" rows="4" class="form-textarea block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Type your reply here..." required></textarea>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary flex-1">Save Reply</button>
+                <button type="button" id="generate-btn" class="btn btn-secondary flex-1 bg-gray-100 text-gray-700 hover:bg-blue-100 border border-gray-300 rounded-lg font-semibold transition">Generate with AI</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Existing Replies Section -->
+    <div>
+        <h2 class="text-xl font-semibold mb-4">Your Existing Replies</h2>
+        <div class="grid gap-6">
+            {% for reply in replies %}
+            <div class="bg-white rounded-lg shadow p-5">
+                <h3 class="text-lg font-bold mb-2">{{ reply.title }}</h3>
+                <p class="text-gray-700 whitespace-pre-line">{{ reply.content }}</p>
+            </div>
+            {% else %}
+            <div class="text-gray-500">No saved replies yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('generate-btn').addEventListener('click', async function() {
+    const titleInput = document.getElementById('reply-title');
+    const contentTextarea = document.getElementById('reply-content-textarea');
+    const btn = this;
+    const topic = titleInput.value.trim();
+    if (!topic) {
+        alert('Please enter a title for your reply.');
+        return;
+    }
+    btn.textContent = 'Generating...';
+    btn.disabled = true;
+    try {
+        const response = await fetch('/generate_reply', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ topic })
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to generate reply.');
+        }
+        const data = await response.json();
+        contentTextarea.value = data.reply_content || '';
+    } catch (err) {
+        alert('Error: ' + err.message);
+    } finally {
+        btn.textContent = 'Generate with AI';
+        btn.disabled = false;
+    }
+});
+</script>
+{% endblock dashboard_content %}

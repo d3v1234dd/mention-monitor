@@ -1,0 +1,51 @@
+{% extends 'dashboard_layout.html' %}
+{% block dashboard_content %}
+{% include 'navbar_private.html' %}
+<div class="p-8 pt-20">
+  <h1 class="text-3xl font-bold mb-6">Saved Replies</h1>
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow flex flex-col">
+      <h2 class="text-xl font-bold mb-4">Your Personal Playbook</h2>
+      <form method="POST" class="mb-4 flex flex-col gap-2">
+        <input type="hidden" name="action" value="save">
+        <input type="text" name="title" placeholder="Reply Title (e.g. Why We're Different)" class="px-4 py-2 rounded bg-gray-900 text-white w-full mb-2" value="{{ ai_title if ai_title else '' }}">
+        <textarea name="content" placeholder="Reply Content" rows="3" class="px-4 py-2 rounded bg-gray-900 text-white w-full">{{ ai_content if ai_content else '' }}</textarea>
+        <button type="submit" class="mt-2 px-6 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700">Save Reply</button>
+      </form>
+      <div class="mt-4">
+        <h3 class="text-lg font-semibold mb-2">Saved Replies</h3>
+        <ul>
+          {% for reply in replies %}
+          <li class="mb-2 p-2 bg-gray-100 dark:bg-gray-900 rounded flex flex-col md:flex-row md:items-center justify-between">
+            <div>
+              <span class="font-bold text-sm">{{ reply.title }}</span>
+              <span class="block text-xs text-gray-700 dark:text-gray-300">{{ reply.content }}</span>
+            </div>
+            <div class="flex gap-2 mt-2 md:mt-0">
+              <button class="px-2 py-1 bg-black text-white rounded text-xs" onclick="navigator.clipboard.writeText('{{ reply.content }}')">Copy</button>
+              <form method="POST" style="display:inline;">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="reply_id" value="{{ reply.id }}">
+                <button type="submit" class="px-2 py-1 bg-red-600 text-white rounded text-xs">Delete</button>
+              </form>
+              <details class="ml-2">
+                <summary class="cursor-pointer text-xs text-blue-600">Edit</summary>
+                <form method="POST" class="mt-2 flex flex-col gap-1">
+                  <input type="hidden" name="action" value="edit">
+                  <input type="hidden" name="reply_id" value="{{ reply.id }}">
+                  <input type="text" name="title" value="{{ reply.title }}" class="px-2 py-1 rounded bg-gray-900 text-white text-xs">
+                  <textarea name="content" rows="2" class="px-2 py-1 rounded bg-gray-900 text-white text-xs">{{ reply.content }}</textarea>
+                  <button type="submit" class="px-2 py-1 bg-blue-600 text-white rounded text-xs mt-1">Update</button>
+                </form>
+              </details>
+            </div>
+          </li>
+          {% else %}
+          <li class="text-gray-500 dark:text-gray-400 py-4">No saved replies yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "dashboard_layout.html" %}
+{% block dashboard_content %}
+{% include 'navbar_private.html' %}
+<div class="p-8 bg-white min-h-screen">
+    <h1 class="text-3xl font-bold text-black mb-6">Analytics Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col">
+            <h2 class="text-xl font-semibold text-black mb-4">Mentions Over Time</h2>
+            <canvas id="mentionsOverTimeChart" class="w-full h-64"></canvas>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col">
+            <h2 class="text-xl font-semibold text-black mb-4">Top Subreddits</h2>
+            <canvas id="topSubredditsChart" class="w-full h-64"></canvas>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col">
+            <h2 class="text-xl font-semibold text-black mb-4">Top Authors</h2>
+            <canvas id="topAuthorsChart" class="w-full h-64"></canvas>
+        </div>
+    </div>
+    <div class="bg-white border-2 border-black rounded-2xl shadow-lg p-8">
+        <p class="text-black">Charts and analytics will appear here.</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data from backend
+        const mentionsOverTimeData = {{ mentions_over_time | tojson | safe }};
+        const topSubredditsData = {{ top_subreddits | tojson | safe }};
+        const topAuthorsData = {{ top_authors | tojson | safe }};
+        // Chart.js logic here
+    </script>
+</div>
+{% endblock %}
+
+    // Mentions Over Time Line Chart
+    const ctxMentions = document.getElementById('mentionsOverTimeChart').getContext('2d');
+    new Chart(ctxMentions, {
+        type: 'line',
+        data: {
+            labels: mentionsOverTimeData.labels,
+            datasets: [{
+                label: 'Mentions',
+                data: mentionsOverTimeData.data,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Mentions' }, beginAtZero: true }
+            }
+        }
+    });
+
+    // Top Subreddits Bar Chart
+    const ctxSubreddits = document.getElementById('topSubredditsChart').getContext('2d');
+    new Chart(ctxSubreddits, {
+        type: 'bar',
+        data: {
+            labels: topSubredditsData.labels,
+            datasets: [{
+                label: 'Mentions',
+                data: topSubredditsData.data,
+                backgroundColor: '#10b981'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Subreddit' } },
+                y: { title: { display: true, text: 'Mentions' }, beginAtZero: true }
+            }
+        }
+    });
+
+    // Top Authors Horizontal Bar Chart
+    const ctxAuthors = document.getElementById('topAuthorsChart').getContext('2d');
+    new Chart(ctxAuthors, {
+        type: 'bar',
+        data: {
+            labels: topAuthorsData.labels,
+            datasets: [{
+                label: 'Mentions',
+                data: topAuthorsData.data,
+                backgroundColor: '#f59e42'
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Mentions' }, beginAtZero: true },
+                y: { title: { display: true, text: 'Author' } }
+            }
+        }
+    });
+</script>
+{% endblock %}

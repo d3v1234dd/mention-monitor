@@ -1,0 +1,104 @@
+{% extends "dashboard_layout.html" %}
+
+{% block dashboard_content %}
+<div class="px-4 py-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+
+        <div>
+            <h1 class="text-3xl font-bold text-black dark:text-white">Welcome, {{ user.username }}!</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mt-4 space-y-2">
+                    {% for category, message in messages %}
+                        <div class="p-4 text-sm rounded-lg {% if category == 'error' %} bg-red-100 text-red-700 dark:bg-red-200 dark:text-red-800 {% else %} bg-blue-100 text-blue-700 dark:bg-blue-200 dark:text-blue-800 {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-black text-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center text-center">
+                <h2 class="text-xl font-semibold mb-2">Generate a Response</h2>
+                <p class="mb-4 text-sm text-gray-300">Go to the AI Agent page to create and manage your library of saved replies.</p>
+                <a href="{{ url_for('reddit_ai_agent') }}" class="px-6 py-2 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition">Go to AI Agent</a>
+            </div>
+            <div class="bg-white border border-black rounded-xl shadow-lg p-6 flex flex-col items-center justify-center text-center dark:bg-gray-800">
+                <h2 class="text-xl font-semibold mb-2 text-black dark:text-white">View Your Analytics</h2>
+                <p class="mb-4 text-sm text-black dark:text-gray-300">See charts and data on your top mentions, subreddits, and authors.</p>
+                <a href="{{ url_for('reddit_share_of_voice') }}" class="px-6 py-2 rounded-lg bg-black text-white font-bold hover:bg-gray-800 transition">View Analytics</a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-black dark:bg-gray-800">
+            <h2 class="text-xl font-semibold mb-4 text-black dark:text-white">Add a New Keyword</h2>
+            <div class="mb-3 text-sm text-black dark:text-gray-300 flex justify-between">
+                <span>Current Plan: <span class="font-semibold">{{ user.plan|capitalize }}</span></span>
+                <span>Usage: <span class="font-semibold">{{ keywords|length }} / 3 Keywords Used</span></span>
+            </div>
+            <a href="#" class="block w-full mb-4 py-3 px-4 bg-black text-white rounded-lg font-semibold text-base text-center hover:bg-gray-800 transition">Upgrade to Pro</a>
+            <form method="POST" action="{{ url_for('reddit_monitor') }}" class="space-y-4">
+                <div>
+                    <label for="keyword" class="sr-only">Keyword</label>
+                    <input type="text" id="keyword" name="keyword" class="block w-full px-4 py-3 border border-black rounded-lg bg-white text-black placeholder-gray-500 focus:ring-black focus:border-black dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="e.g., 'Tesla Model Y'" required>
+                </div>
+                <button type="submit" class="w-full py-3 px-4 text-white bg-black hover:bg-gray-800 rounded-lg font-semibold text-base transition">Add Keyword</button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-black dark:bg-gray-800">
+            <h2 class="text-xl font-semibold mb-4 text-black dark:text-white">Your Monitored Keywords</h2>
+            {% if keywords %}
+                <ul class="space-y-3">
+                    {% for keyword in keywords %}
+                    <li class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                        <span class="text-black dark:text-white font-medium">{{ keyword.text }}</span>
+                        <form action="{{ url_for('delete_keyword', keyword_id=keyword.id) }}" method="POST">
+                            <button type="submit" class="px-4 py-2 bg-black text-white rounded-lg font-semibold text-sm hover:bg-gray-800 transition">Delete</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-black dark:text-gray-300 text-center py-4">You are not monitoring any keywords yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-black dark:bg-gray-800">
+            <h2 class="text-xl font-semibold mb-4 text-black dark:text-white">Recent Mentions</h2>
+            {% if posts %}
+                <div class="space-y-4">
+                    {% for post in posts %}
+                    <article class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm dark:bg-gray-700 dark:border-gray-600">
+                        <div class="mb-2 text-xs text-gray-500 dark:text-gray-400 flex flex-wrap items-center gap-2">
+                            <span class="font-semibold text-black dark:text-white">r/{{ post.subreddit }}</span> &bull;
+                            <span>u/{{ post.author }}</span>
+                            {% if post.intent == "Buying Question" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">{{ post.intent }}</span>
+                            {% elif post.intent == "Competitor Complaint" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">{{ post.intent }}</span>
+                            {% elif post.intent == "Support Request" %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">{{ post.intent }}</span>
+                            {% else %}
+                                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">{{ post.intent }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3 text-black dark:text-gray-200 whitespace-pre-wrap">{{ post.text }}</div>
+                        <a href="{{ post.permalink }}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-500 hover:underline text-sm font-medium">View on Reddit</a>
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-black dark:text-gray-300 text-center py-4">No mentions found yet. They will appear here once your keywords are spotted!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock dashboard_content %}
+
+@app.route('/action-items', methods=['GET', 'POST'])
+@login_required
+def action_items():
+    # ...function code...

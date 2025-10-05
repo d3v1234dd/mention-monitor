@@ -1,0 +1,50 @@
+{% extends 'dashboard_layout.html' %}
+{% block dashboard_content %}
+{% include 'navbar_private.html' %}
+<div class="p-8 pt-20">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-black dark:text-white">Share of Voice Analytics</h1>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-2">Mentions Over Time</h2>
+      <canvas id="mentionsChart"></canvas>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-2">Top Subreddits</h2>
+      <canvas id="subredditsChart"></canvas>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-2">Top Authors</h2>
+      <canvas id="authorsChart"></canvas>
+    </div>
+  </div>
+  <script>
+    // Example Chart.js data
+    const subredditsCtx = document.getElementById('subredditsChart').getContext('2d');
+    new Chart(subredditsCtx, {
+      type: 'bar',
+      data: {
+        labels: ['subreddit1', 'subreddit2', 'subreddit3'],
+        datasets: [{
+          label: 'Mentions',
+          data: [12, 19, 7],
+          backgroundColor: 'black',
+        }]
+      }
+    });
+    const authorsCtx = document.getElementById('authorsChart').getContext('2d');
+    new Chart(authorsCtx, {
+      type: 'bar',
+      data: {
+        labels: ['author1', 'author2', 'author3'],
+        datasets: [{
+          label: 'Mentions',
+          data: [5, 8, 3],
+          backgroundColor: 'black',
+        }]
+      }
+    });
+  </script>
+</div>
+{% endblock %}

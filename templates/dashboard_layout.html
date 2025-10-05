@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex min-h-screen bg-white">
+  <!-- Sidebar -->
+  <aside class="w-72 h-screen bg-black text-white flex flex-col border-r border-gray-900 fixed md:relative z-40">
+    <div class="flex items-center justify-center h-20 border-b border-gray-800">
+      <span class="text-2xl font-bold tracking-tight">Mention Monitor</span>
+    </div>
+    <nav class="flex-1 px-4 py-6 overflow-y-auto">
+      <ul class="space-y-2">
+        <!-- Inbox -->
+        <li class="mt-4 mb-2 text-lg font-bold">Inbox</li>
+        <li class="ml-2"><a href="{{ url_for('reddit_monitor') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Live Feed</a></li>
+  <li class="ml-2"><a href="{{ url_for('action_items') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Action Items</a></li>
+        <!-- Analytics -->
+        <li class="mt-6 mb-2 text-lg font-bold">Analytics</li>
+        <li class="ml-2"><a href="{{ url_for('reddit_share_of_voice') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Dashboard</a></li>
+  <li class="ml-2"><a href="{{ url_for('lead_board') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Lead Board</a></li>
+        <!-- Arsenal -->
+        <li class="mt-6 mb-2 text-lg font-bold">Arsenal</li>
+        <li class="ml-2"><a href="{{ url_for('reddit_ai_agent') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Saved Replies</a></li>
+  <li class="ml-2"><a href="{{ url_for('ai_generator') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">AI Generator</a></li>
+        <!-- Content Studio -->
+        <li class="mt-6 mb-2 text-lg font-bold">Content Studio</li>
+        <li class="ml-2"><a href="#" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Content Briefs</a></li>
+  <li class="ml-2"><a href="{{ url_for('competitor_watch') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Competitor Watch</a></li>
+        <!-- Settings -->
+        <li class="mt-6 mb-2 text-lg font-bold">Settings</li>
+        <li class="ml-2"><a href="{{ url_for('reddit_keywords') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Keywords</a></li>
+        <li class="ml-2"><a href="{{ url_for('knowledgebase') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Knowledgebase</a></li>
+        <li class="ml-2"><a href="{{ url_for('settings') }}" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">Account</a></li>
+        <li class="ml-2"><a href="#" class="block px-2 py-1 rounded hover:bg-gray-700 text-sm">FAQ</a></li>
+      </ul>
+    </nav>
+    <!-- Plan and Username -->
+    <div class="mt-auto px-4 py-6 border-t border-gray-800">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-semibold bg-gray-900 px-3 py-1 rounded text-white">{{ user.plan|capitalize }}</span>
+      </div>
+      <div class="mt-2 text-xs text-gray-400">{{ user.username }}</div>
+    </div>
+  </aside>
+  <!-- Main Content -->
+  <main class="flex-1 ml-72">
+    {% block dashboard_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

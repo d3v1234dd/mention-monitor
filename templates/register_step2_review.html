@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a href="{{ url_for('home') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            Mention Monitor
+        </a>
+        <div class="w-full bg-white rounded-lg shadow-md dark:border md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    Review Your AI-Generated Profile
+                </h1>
+                
+                <form action="{{ url_for('register_complete') }}" method="POST">
+                    <div id="business-profile-section" class="p-4 mb-4 bg-gray-100 rounded-lg dark:bg-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Business Profile</h2>
+                        <p class="text-sm text-gray-700 dark:text-gray-300"><strong>Core Offering:</strong> <span id="core-offering">Loading...</span></p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300"><strong>Target Customer:</strong> <span id="target-customer">Loading...</span></p>
+                    </div>
+
+                    <div id="keywords-section" class="p-4 mb-4 bg-gray-100 rounded-lg dark:bg-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Suggested Keywords</h2>
+                        <div id="keywords-container" class="flex flex-wrap gap-2">
+                            </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Create Your Account</h2>
+                        <div class="space-y-4">
+                             <div>
+                                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                                <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" required>
+                            </div>
+                            <div>
+                                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full mt-6 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Complete Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const onboardingDataString = sessionStorage.getItem('onboardingData');
+        if (onboardingDataString) {
+            const data = JSON.parse(onboardingDataString);
+
+            // Populate Business Profile
+            if (data.business_profile) {
+                document.getElementById('core-offering').textContent = data.business_profile.core_offering || 'N/A';
+                document.getElementById('target-customer').textContent = data.business_profile.target_customer || 'N/A';
+            }
+
+            // Populate Keywords
+            const keywordsContainer = document.getElementById('keywords-container');
+            if (data.suggested_keywords && data.suggested_keywords.length > 0) {
+                data.suggested_keywords.forEach(keyword => {
+                    const tag = document.createElement('span');
+                    tag.className = 'bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300';
+                    tag.textContent = keyword;
+                    
+                    // Add keyword to a hidden input so we can submit it with the form
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'keywords[]';
+                    hiddenInput.value = keyword;
+
+                    keywordsContainer.appendChild(tag);
+                    keywordsContainer.appendChild(hiddenInput);
+                });
+            } else {
+                keywordsContainer.textContent = 'No keywords were generated.';
+            }
+        } else {
+            // Handle case where there's no data
+            document.getElementById('core-offering').textContent = 'Error: No data from previous step.';
+            document.getElementById('target-customer').textContent = 'Please go back and try again.';
+        }
+    });
+</script>
+{% endblock %}

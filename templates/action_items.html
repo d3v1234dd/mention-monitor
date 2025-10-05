@@ -1,0 +1,61 @@
+{% extends "dashboard_layout.html" %}
+{% block dashboard_content %}
+<div class="max-w-4xl mx-auto py-10">
+  <h1 class="text-3xl font-bold mb-6 text-black">Action Items: Your Prioritized To-Do List</h1>
+  <p class="mb-8 text-gray-700">This is your focused workspace. Only mentions you flagged as important appear here. Mark them complete as you respond.</p>
+  <div class="mb-10">
+    <h2 class="text-xl font-semibold mb-4 text-black">To-Do</h2>
+    {% if action_items %}
+      <div class="space-y-6">
+        {% for post in action_items %}
+        <div class="border border-black rounded-lg p-6 bg-white shadow flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <div class="mb-2 text-xs text-gray-500 flex flex-wrap items-center gap-2">
+              <span class="font-semibold text-black">r/{{ post.subreddit }}</span>
+              &bull;
+              <span>u/{{ post.author }}</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300">{{ post.intent }}</span>
+            </div>
+            <div class="mb-2 text-black whitespace-pre-line">{{ post.text }}</div>
+            <a href="{{ post.permalink }}" target="_blank" class="inline-block text-black hover:underline text-sm font-medium">View on Reddit</a>
+          </div>
+          <form method="POST" class="mt-4 md:mt-0">
+            <input type="hidden" name="complete_id" value="{{ post.id }}">
+            <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition">Mark as Complete</button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="border border-black bg-white rounded-lg shadow p-6 w-full">
+        <p class="text-black text-center">No action items yet. Flag important mentions from your Live Feed to see them here!</p>
+      </div>
+    {% endif %}
+  </div>
+  <div>
+    <h2 class="text-xl font-semibold mb-4 text-black">Completed</h2>
+    {% if completed_items %}
+      <div class="space-y-6">
+        {% for post in completed_items %}
+        <div class="border border-gray-300 rounded-lg p-6 bg-gray-100 shadow flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <div class="mb-2 text-xs text-gray-500 flex flex-wrap items-center gap-2">
+              <span class="font-semibold text-black">r/{{ post.subreddit }}</span>
+              &bull;
+              <span>u/{{ post.author }}</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-300">Completed</span>
+            </div>
+            <div class="mb-2 text-black whitespace-pre-line">{{ post.text }}</div>
+            <a href="{{ post.permalink }}" target="_blank" class="inline-block text-black hover:underline text-sm font-medium">View on Reddit</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="border border-black bg-white rounded-lg shadow p-6 w-full">
+        <p class="text-black text-center">No completed items yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'dashboard_layout.html' %}
+{% block dashboard_content %}
+<div class="p-8 pt-20">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-black dark:text-white">Lead Board</h1>
+    <p class="mt-2 text-gray-600 dark:text-gray-300">Your high-value opportunities, filtered by AI.</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    {% for post in posts %}
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow flex flex-col justify-between">
+      <div>
+        <div class="mb-2 text-xs text-gray-500">{{ post.subreddit }} • {{ post.author }}</div>
+        <div class="mb-4 text-base text-black dark:text-white">{{ post.text }}</div>
+        <div class="mb-2">
+          <span class="inline-block px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs font-semibold">{{ post.intent }}</span>
+        </div>
+      </div>
+      <form method="POST" class="mt-4">
+        <input type="hidden" name="post_id" value="{{ post.id }}">
+        <label for="status-{{ post.id }}" class="block text-xs font-medium mb-1">Status:</label>
+        <select name="status" id="status-{{ post.id }}" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:text-white">
+          <option value="To Do" {% if post.intent == 'To Do' %}selected{% endif %}>To Do</option>
+          <option value="Contacted" {% if post.intent == 'Contacted' %}selected{% endif %}>Contacted</option>
+          <option value="Won" {% if post.intent == 'Won' %}selected{% endif %}>Won</option>
+        </select>
+        <button type="submit" class="mt-2 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Update Status</button>
+      </form>
+      <div class="mt-4">
+        <details>
+          <summary class="cursor-pointer text-xs text-blue-600 dark:text-blue-400">Quick Arsenal: Saved Replies</summary>
+          <div class="mt-2">
+            {% for reply in replies %}
+              <div class="mb-2 p-2 bg-gray-100 dark:bg-gray-900 rounded">
+                <div class="font-semibold text-sm">{{ reply.title }}</div>
+                <div class="text-xs text-gray-700 dark:text-gray-300">{{ reply.content }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </details>
+      </div>
+      <a href="{{ post.permalink }}" target="_blank" class="mt-2 text-xs text-blue-500 hover:underline">View on Reddit</a>
+    </div>
+    {% else %}
+    <div class="col-span-full text-center text-gray-500 dark:text-gray-400 py-12">
+      <p>No high-value leads found. Check back later!</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
